@@ -9,14 +9,10 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            // Group React, Redux, and Router together to avoid hook reference issues
+            // Group core React/Redux/Router libraries using more specific paths
+            // to avoid matching other libraries like lucide-react
             if (
-              id.includes('react') || 
-              id.includes('react-dom') || 
-              id.includes('scheduler') ||
-              id.includes('react-router') ||
-              id.includes('react-redux') ||
-              id.includes('@reduxjs/toolkit')
+              /node_modules\/(react|react-dom|scheduler|react-router|react-router-dom|react-redux|@reduxjs\/toolkit)\//.test(id)
             ) {
               return 'vendor-core';
             }
