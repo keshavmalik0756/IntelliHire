@@ -18,7 +18,7 @@ import {
     ArrowLeft
 } from 'lucide-react';
 import { interviewService } from '../services/interviewService';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 
 const History = () => {
     const navigate = useNavigate();
