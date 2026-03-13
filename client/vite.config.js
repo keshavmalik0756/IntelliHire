@@ -9,22 +9,31 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            // React must be first to avoid circular dependencies
-            if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) {
-              return 'vendor-react';
+            // Group React, Redux, and Router together to avoid hook reference issues
+            if (
+              id.includes('react') || 
+              id.includes('react-dom') || 
+              id.includes('scheduler') ||
+              id.includes('react-router') ||
+              id.includes('react-redux') ||
+              id.includes('@reduxjs/toolkit')
+            ) {
+              return 'vendor-core';
             }
+            
+            // Large isolated libraries
             if (id.includes('firebase')) return 'vendor-firebase';
             if (id.includes('framer-motion')) return 'vendor-framer-motion';
             if (id.includes('recharts') || id.includes('d3-')) return 'vendor-charts';
             if (id.includes('lucide-react')) return 'vendor-lucide';
-            if (id.includes('@reduxjs/toolkit') || id.includes('react-redux')) return 'vendor-redux';
             if (id.includes('axios')) return 'vendor-axios';
             if (id.includes('@mediapipe')) return 'vendor-mediapipe';
+            
             return 'vendor-others';
           }
         },
       },
     },
-    chunkSizeWarningLimit: 1500,
+    chunkSizeWarningLimit: 2000,
   },
 })
