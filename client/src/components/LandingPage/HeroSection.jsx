@@ -1,11 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { ArrowRight, Sparkles, CheckCircle2, PlayCircle, Mic, Brain, TrendingUp, ShieldCheck } from 'lucide-react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 
 const HeroSection = () => {
     const navigate = useNavigate();
+    const { token } = useSelector((state) => state.auth);
 
     // Mock Data for the Radar Chart (Skill Growth) - Optimized for Light Theme
     const skillData = [
@@ -63,7 +65,7 @@ const HeroSection = () => {
                             <motion.button
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
-                                onClick={() => navigate('/interview')}
+                                onClick={() => navigate(token ? '/interview' : '/auth')}
                                 className="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white transition-all duration-200 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-xl shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30 focus:outline-none ring-offset-2 focus:ring-emerald-500"
                             >
                                 <Sparkles className="w-5 h-5 mr-2" />

@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import * as LucideIcons from 'lucide-react';
 import { ArrowRight, Heart } from 'lucide-react';
 import { BsTwitterX } from 'react-icons/bs';
@@ -8,9 +9,9 @@ import { footerSections, socialLinks } from './data';
 
 const Footer = () => {
   const navigate = useNavigate();
+  const { token } = useSelector((state) => state.auth);
 
-  const handleLogin = () => navigate('/login');
-  const handleSignup = () => navigate('/signup');
+  const handleAuth = () => navigate('/auth');
 
   const handleLinkClick = (link) => {
     if (link.href?.startsWith('#')) {
@@ -54,23 +55,37 @@ const Footer = () => {
           </div>
           
           <div className="relative z-10 flex flex-col sm:flex-row gap-4 mt-6 md:mt-0">
-             <motion.button 
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleSignup}
-                className="inline-flex items-center justify-center px-8 py-3.5 text-sm font-bold text-white transition-all bg-gradient-to-r from-emerald-600 to-teal-600 rounded-xl shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30"
-             >
-                Get Started Free
-                <ArrowRight className="w-4 h-4 ml-2" />
-             </motion.button>
-             <motion.button 
-                whileHover={{ scale: 1.02, backgroundColor: '#f8fafc' }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleLogin}
-                className="inline-flex items-center justify-center px-8 py-3.5 text-sm font-bold text-slate-700 bg-white border border-slate-200 rounded-xl hover:border-slate-300 transition-all"
-             >
-                Log In
-             </motion.button>
+             {!token ? (
+               <>
+                 <motion.button 
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleAuth}
+                    className="inline-flex items-center justify-center px-8 py-3.5 text-sm font-bold text-white transition-all bg-gradient-to-r from-emerald-600 to-teal-600 rounded-xl shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30"
+                 >
+                    Get Started Free
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                 </motion.button>
+                 <motion.button 
+                    whileHover={{ scale: 1.02, backgroundColor: '#f8fafc' }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleAuth}
+                    className="inline-flex items-center justify-center px-8 py-3.5 text-sm font-bold text-slate-700 bg-white border border-slate-200 rounded-xl hover:border-slate-300 transition-all"
+                 >
+                    Log In
+                 </motion.button>
+               </>
+             ) : (
+               <motion.button 
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => navigate('/dashboard')}
+                  className="inline-flex items-center justify-center px-8 py-3.5 text-sm font-bold text-white transition-all bg-gradient-to-r from-emerald-600 to-teal-600 rounded-xl shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30"
+               >
+                  Go to Dashboard
+                  <ArrowRight className="w-4 h-4 ml-2" />
+               </motion.button>
+             )}
           </div>
         </motion.div>
       </div>
