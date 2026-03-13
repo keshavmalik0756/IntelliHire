@@ -84,7 +84,7 @@ cd intellihire
    npm start
    ```
 
-   The server will run on `http://localhost:5000` by default.
+   The server will run on `http://localhost:5000` by default. For production, the API is deployed at `https://intellihire-xezg.onrender.com`.
 
 ### Frontend Setup
 
@@ -106,7 +106,7 @@ cd intellihire
    npm run dev
    ```
 
-   The client will run on `http://localhost:5173` by default.
+   The client will run on `http://localhost:5173` by default. Ensure `VITE_API_URL` in `client/.env` points to the deployed backend for production use.
 
 ## Usage
 

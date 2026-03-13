@@ -1,40 +1,40 @@
 // ─── Firebase Admin SDK ───────────────────────────────────────────────────────
 // Used server-side to verify Firebase ID tokens sent from the client.
 //
-// Option A — Service Account JSON file (recommended for dev):
-//   1. Firebase Console → Project Settings → Service Accounts → Generate new private key
-//   2. Save as server/firebase/serviceAccountKey.json  (already in .gitignore)
-//
-// Option B — Environment variable (recommended for production):
-//   Set FIREBASE_SERVICE_ACCOUNT_JSON to the stringified JSON in your env.
+// Production (Render):
+// Set these environment variables in Render:
+// FIREBASE_PROJECT_ID
+// FIREBASE_CLIENT_EMAIL
+// FIREBASE_PRIVATE_KEY
 
-import admin from 'firebase-admin'
-import { readFileSync, existsSync } from 'fs'
-import { fileURLToPath } from 'url'
-import { dirname, join } from 'path'
+import admin from "firebase-admin";
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
+let firebaseInitialized = false;
 
-let serviceAccount
+try {
+  if (!admin.apps.length) {
+    const serviceAccount = {
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY
+        ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n")
+        : undefined,
+    };
 
-// Try loading from env var first (production), then fall back to local file (dev)
-if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
-  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON)
-} else {
-  const keyPath = join(__dirname, 'serviceAccountKey.json')
-  if (existsSync(keyPath)) {
-    serviceAccount = JSON.parse(readFileSync(keyPath, 'utf8'))
+    if (serviceAccount.projectId && serviceAccount.clientEmail && serviceAccount.privateKey) {
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+      });
+
+      firebaseInitialized = true;
+      console.log("✅ Firebase Admin initialized");
+    } else {
+      console.warn("⚠️ Firebase Admin env variables missing. Google auth will not work.");
+      admin.initializeApp();
+    }
   }
+} catch (error) {
+  console.error("❌ Firebase Admin initialization error:", error);
 }
 
-if (!admin.apps.length) {
-  if (serviceAccount) {
-    admin.initializeApp({ credential: admin.credential.cert(serviceAccount) })
-  } else {
-    // Fallback: init without credentials (token verification will fail gracefully)
-    console.warn('⚠️  Firebase Admin: no serviceAccountKey.json found. Google auth will not work.')
-    admin.initializeApp()
-  }
-}
-
-export default admin
+export default admin;
