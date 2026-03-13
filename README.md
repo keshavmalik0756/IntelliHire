@@ -110,7 +110,7 @@ cd intellihire
 
 ## Usage
 
-1. Open your browser and navigate to `http://localhost:5173`
+1. **Frontend Status**: [Deployed on Vercel](https://intellihire-silk.vercel.app/)
 2. Sign up or log in using Firebase Authentication
 3. Complete your profile setup
 4. Start a new interview from the dashboard
