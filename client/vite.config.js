@@ -9,13 +9,13 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            // Group core React/Redux/Router libraries using more specific paths
-            // to avoid matching other libraries like lucide-react
-            if (
-              /node_modules\/(react|react-dom|scheduler|react-router|react-router-dom|react-redux|@reduxjs\/toolkit)\//.test(id)
-            ) {
-              return 'vendor-core';
-            }
+            // React and React-DOM must be separate and loaded first
+            if (id.includes('react-dom')) return 'vendor-react-dom';
+            if (/node_modules\/react\//.test(id)) return 'vendor-react';
+            
+            // Redux and routing
+            if (id.includes('@reduxjs/toolkit') || id.includes('react-redux')) return 'vendor-redux';
+            if (/node_modules\/react-router/.test(id)) return 'vendor-router';
             
             // Large isolated libraries
             if (id.includes('firebase')) return 'vendor-firebase';
